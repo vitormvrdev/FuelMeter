@@ -1,0 +1,13 @@
+services:
+  fuelmeter:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - fuelmeter-data:/app/data
+    environment:
+      - DATABASE_URL=file:/app/data/fuelmeter.db
+    restart: unless-stopped
+
+volumes:
+  fuelmeter-data:

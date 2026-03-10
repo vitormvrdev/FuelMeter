@@ -1,0 +1,53 @@
+-- CreateTable
+CREATE TABLE "Food" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL,
+    "brand" TEXT,
+    "servingSize" REAL NOT NULL,
+    "servingUnit" TEXT NOT NULL,
+    "calories" REAL NOT NULL,
+    "protein" REAL NOT NULL,
+    "carbs" REAL NOT NULL,
+    "fat" REAL NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CreateTable
+CREATE TABLE "Meal" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "MealFood" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "mealId" INTEGER NOT NULL,
+    "foodId" INTEGER NOT NULL,
+    "servings" REAL NOT NULL DEFAULT 1,
+    CONSTRAINT "MealFood_mealId_fkey" FOREIGN KEY ("mealId") REFERENCES "Meal" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "MealFood_foodId_fkey" FOREIGN KEY ("foodId") REFERENCES "Food" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "LogItem" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "date" TEXT NOT NULL,
+    "mealType" TEXT NOT NULL,
+    "foodId" INTEGER NOT NULL,
+    "servings" REAL NOT NULL DEFAULT 1,
+    "mealId" INTEGER,
+    "loggedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "LogItem_foodId_fkey" FOREIGN KEY ("foodId") REFERENCES "Food" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "LogItem_mealId_fkey" FOREIGN KEY ("mealId") REFERENCES "Meal" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "Settings" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "calorieGoal" REAL NOT NULL DEFAULT 2000,
+    "proteinGoal" REAL NOT NULL DEFAULT 150,
+    "carbsGoal" REAL NOT NULL DEFAULT 250,
+    "fatGoal" REAL NOT NULL DEFAULT 65
+);

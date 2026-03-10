@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -8,4 +5,61 @@ generator client {
 
 datasource db {
   provider = "sqlite"
+}
+
+model Food {
+  id          Int        @id @default(autoincrement())
+  name        String
+  brand       String?
+  servingSize Float
+  servingUnit String
+  calories    Float
+  protein     Float
+  carbs       Float
+  fat         Float
+  createdAt   DateTime   @default(now())
+
+  mealFoods MealFood[]
+  logItems  LogItem[]
+}
+
+model Meal {
+  id        Int        @id @default(autoincrement())
+  name      String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  foods    MealFood[]
+  logItems LogItem[]
+}
+
+model MealFood {
+  id       Int   @id @default(autoincrement())
+  mealId   Int
+  foodId   Int
+  servings Float @default(1)
+
+  meal Meal @relation(fields: [mealId], references: [id], onDelete: Cascade)
+  food Food @relation(fields: [foodId], references: [id], onDelete: Cascade)
+}
+
+model LogItem {
+  id       Int      @id @default(autoincrement())
+  date     String // YYYY-MM-DD
+  mealType String // breakfast, lunch, dinner, snack
+  foodId   Int
+  servings Float    @default(1)
+  mealId   Int? // which saved meal this came from
+  loggedAt DateTime @default(now())
+
+  food Food  @relation(fields: [foodId], references: [id], onDelete: Cascade)
+  meal Meal? @relation(fields: [mealId], references: [id], onDelete: SetNull)
+}
+
+model Settings {
+  id          Int   @id @default(autoincrement())
+  calorieGoal Float @default(2000)
+  proteinGoal Float @default(150)
+  carbsGoal   Float @default(250)
+  fatGoal     Float @default(65)
 }
