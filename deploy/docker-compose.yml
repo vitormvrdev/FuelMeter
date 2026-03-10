@@ -1,0 +1,24 @@
+name: fuelmeter
+
+services:
+  fuelmeter:
+    container_name: fuelmeter
+    build: /opt/fuelmeter
+    restart: unless-stopped
+    privileged: true
+    networks:
+      - homelab
+    ports:
+      - "3000:3000"
+    volumes:
+      - fuelmeter-data:/app/data
+    environment:
+      - DATABASE_URL=file:/app/data/fuelmeter.db
+      - NODE_ENV=production
+
+networks:
+  homelab:
+    external: true
+
+volumes:
+  fuelmeter-data:
